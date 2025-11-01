@@ -1,5 +1,4 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "https://auth-t07c.onrender.com/";
+const API_BASE_URL = "https://auth-t07c.onrender.com/";
 
 export const authAPI = {
   register: async (userData) => {
