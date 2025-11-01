@@ -16,10 +16,14 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: [process.env.CLIENT_URL, "https://localhost:3000"],
     credentials: true,
   })
 );
+
+app.get("/", (req, res) => {
+  res.json({ message: "Server is running!" });
+});
 
 //Routes
 app.use("/api", authRoutes);
