@@ -16,7 +16,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: [process.env.CLIENT_URL, "https://localhost:3000"],
+    origin: [process.env.CLIENT_URL, "https://auth-t07c.onrender.com/"],
     credentials: true,
   })
 );
