@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://auth-t07c.onrender.com/";
+const API_BASE_URL = "https://auth-t07c.onrender.com/api";
 
 export const authAPI = {
   register: async (userData) => {
@@ -45,9 +45,14 @@ export const authAPI = {
         method: "GET",
         credentials: "include",
       });
-      return await response.json();
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Logout failed");
+      }
+      return data;
     } catch (error) {
-      throw new Error("Logout failed");
+      console.error("Logout error:", error);
+      throw error;
     }
   },
 
