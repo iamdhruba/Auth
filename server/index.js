@@ -13,26 +13,16 @@ import { app, server } from "./config/socket.js";
 dotenv.config();
 connectDB();
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://auth-t07c.onrender.com",
-  "https://auth-bice-delta.vercel.app"
-];
-
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.header("Access-Control-Allow-Origin", origin);
-  }
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  if (req.method === "OPTIONS") {
-    res.sendStatus(200);
-  } else {
-    next();
-  }
-});
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://auth-t07c.onrender.com",
+    "https://auth-bice-delta.vercel.app"
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 app.use(cookieParser());
 app.use(bodyParser.json());
