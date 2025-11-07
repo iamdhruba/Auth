@@ -3,12 +3,15 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { authAPI } from "../services/services.jsx";
+import { useSocket } from "../context/SocketContext";
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { connectSocket } = useSocket();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,22 +25,14 @@ const LoginForm = () => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:4000/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(formData)
-      });
-      const data = await response.json();
-      if (response.ok) {
-        Cookies.set('token', data.token, { expires: 1 });
-        localStorage.setItem('token', data.token);
-        navigate("/dashboard");
-      } else {
-        setError(data.message || "Login failed");
-      }
+      const result = await authAPI.login(formData);
+      Cookies.set('token', result.data.token, { expires: 1 });
+      localStorage.setItem('token', result.data.token);
+      localStorage.setItem('user', JSON.stringify(result.data.user));
+      connectSocket();
+      navigate("/dashboard");
     } catch (error) {
-      setError("Login failed. Please try again.");
+      setError(error.message || "Login failed. Please try again.");
     }
   };
   return (

@@ -1,8 +1,9 @@
 import User from "../model/user.model.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "../middleware/jwt.middleware.js";
-import crypto from "crypto";
 import transporter from "../config/nodemailer.config.js";
+
+const BASE_URL = "http://localhost:5173";
 
 // Generate OTP
 const generateOTP = () => {
@@ -34,10 +35,10 @@ export const register = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 24 * 60 * 60 * 1000,
-      path: "/"
+      path: "/",
     });
 
     res.status(201).json({
@@ -80,10 +81,10 @@ export const login = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 24 * 60 * 60 * 1000,
-      path: "/"
+      path: "/",
     });
 
     res.status(200).json({
@@ -106,9 +107,9 @@ export const logout = async (req, res) => {
   try {
     res.clearCookie("token", {
       httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      path: "/"
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/",
     });
     res.status(200).json({ message: "Logout Successful" });
   } catch (error) {
@@ -121,7 +122,7 @@ export const sendOTP = async (req, res) => {
   try {
     const { email } = req.body;
     console.log("Sending OTP to:", email);
-    
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -154,7 +155,7 @@ export const sendOTP = async (req, res) => {
             This is an automated message. Please do not reply to this email address.
           </p>
         </div>
-      `
+      `,
     };
 
     await transporter.sendMail(mailOptions);
@@ -163,7 +164,9 @@ export const sendOTP = async (req, res) => {
     res.status(200).json({ message: "OTP sent to email" });
   } catch (error) {
     console.error("Send OTP error:", error);
-    res.status(500).json({ message: "Error sending OTP", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error sending OTP", error: error.message });
   }
 };
 
@@ -175,7 +178,7 @@ export const verifyOTPAndResetPassword = async (req, res) => {
     const user = await User.findOne({
       email,
       resetPasswordToken: otp,
-      resetPasswordExpires: { $gt: Date.now() }
+      resetPasswordExpires: { $gt: Date.now() },
     });
 
     if (!user) {
@@ -191,6 +194,8 @@ export const verifyOTPAndResetPassword = async (req, res) => {
     res.status(200).json({ message: "Password reset successful" });
   } catch (error) {
     console.error("Reset password error:", error);
-    res.status(500).json({ message: "Error resetting password", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error resetting password", error: error.message });
   }
 };

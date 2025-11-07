@@ -1,9 +1,9 @@
-const API_BASE_URL = "https://auth-t07c.onrender.com/api";
+const API_BASE_URL = "http://localhost:4000/api";
 
 export const authAPI = {
   register: async (userData) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/register`, {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -22,7 +22,7 @@ export const authAPI = {
 
   login: async (userData) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/login`, {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -41,15 +41,14 @@ export const authAPI = {
 
   logout: async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/logout`, {
+      const response = await fetch(`${API_BASE_URL}/auth/logout`, {
         method: "GET",
         credentials: "include",
       });
-      const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.message || "Logout failed");
+        throw new Error("Logout failed");
       }
-      return data;
+      return await response.json();
     } catch (error) {
       console.error("Logout error:", error);
       throw error;
@@ -58,7 +57,7 @@ export const authAPI = {
 
   sendOTP: async (email) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/send-otp`, {
+      const response = await fetch(`${API_BASE_URL}/auth/send-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -76,7 +75,7 @@ export const authAPI = {
 
   verifyOTPAndResetPassword: async (email, otp, newPassword) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/verify-otp-reset`, {
+      const response = await fetch(`${API_BASE_URL}/auth/verify-otp-reset`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp, newPassword }),

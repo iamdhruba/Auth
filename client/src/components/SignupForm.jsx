@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authAPI } from "../services/services";
 import Cookies from "js-cookie";
+import { useSocket } from "../context/SocketContext";
 
 const SignupForm = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ const SignupForm = () => {
     password: "",
   });
   const navigate = useNavigate();
+  const { connectSocket } = useSocket();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,6 +25,8 @@ const SignupForm = () => {
       const response = await authAPI.register(formData);
       Cookies.set('token', response.data.token, { expires: 1 });
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      connectSocket();
       navigate("/dashboard");
     } catch (error) {
       console.error("Signup failed:", error.message);

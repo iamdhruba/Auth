@@ -11,11 +11,13 @@ const Dashboard = () => {
   const handleLogout = async () => {
     try {
       await authAPI.logout();
-      Cookies.remove('token');
-      localStorage.removeItem('token');
-      navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);
+    } finally {
+      Cookies.remove('token');
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      navigate("/login");
     }
   };
 
@@ -28,6 +30,11 @@ const Dashboard = () => {
               <h1 className="text-xl font-semibold">Dashboard</h1>
             </div>
             <div className="flex items-center space-x-4">
+              <button
+                onClick={() => navigate("/chat")}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm">
+                Chat
+              </button>
               <button
                 onClick={handleLogout}
                 className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-full text-sm">

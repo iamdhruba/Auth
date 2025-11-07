@@ -8,8 +8,8 @@ import { verifyToken } from "../middleware/jwt.middleware.js";
 
 const router = express.Router();
 
-router.post("/register", singupValidation, register);
-router.post("/login", loginValidation, login);
+router.post("/register", register);
+router.post("/login", login);
 router.get("/logout", logout);
 router.post("/send-otp", sendOTP);
 router.post("/verify-otp-reset", verifyOTPAndResetPassword);
