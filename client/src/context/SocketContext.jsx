@@ -20,7 +20,7 @@ export const SocketContextProvider = ({ children }) => {
 
     useEffect(() => {
         if (user) {
-            const socketConnection = io("http://localhost:4000", {
+            const socketConnection = io(import.meta.env.PROD ? "https://auth-t07c.onrender.com" : "http://localhost:4000", {
                 query: {
                     userId: user.id,
                 },

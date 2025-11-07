@@ -40,10 +40,12 @@ const Chat = () => {
         return () => socket.off("newMessage");
     }, [socket, selectedUser, currentUser]);
 
+    const API_BASE = import.meta.env.PROD ? "https://auth-t07c.onrender.com/api" : "http://localhost:4000/api";
+
     const fetchUsers = async () => {
         try {
             const token = localStorage.getItem("token");
-            const response = await axios.get("http://localhost:4000/api/messages/users", {
+            const response = await axios.get(`${API_BASE}/messages/users`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setUsers(response.data);
@@ -55,7 +57,7 @@ const Chat = () => {
     const fetchMessages = async (userId) => {
         try {
             const token = localStorage.getItem("token");
-            const response = await axios.get(`http://localhost:4000/api/messages/${userId}`, {
+            const response = await axios.get(`${API_BASE}/messages/${userId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setMessages(response.data);
@@ -70,7 +72,7 @@ const Chat = () => {
 
         try {
             const token = localStorage.getItem("token");
-            const response = await axios.post("http://localhost:4000/api/messages/send", {
+            const response = await axios.post(`${API_BASE}/messages/send`, {
                 receiverId: selectedUser._id,
                 text: newMessage
             }, {
