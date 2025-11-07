@@ -3,7 +3,11 @@ import bcrypt from "bcrypt";
 import { generateToken } from "../middleware/jwt.middleware.js";
 import transporter from "../config/nodemailer.config.js";
 
-const BASE_URL = "http://localhost:5173";
+const ALLOWED_ORIGINS = [
+  "http://localhost:5173",
+  "https://auth-t07c.onrender.com",
+  "https://auth-bice-delta.vercel.app"
+];
 
 // Generate OTP
 const generateOTP = () => {
